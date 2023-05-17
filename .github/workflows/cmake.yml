@@ -18,29 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: macOS,             os: macos-latest,   shell: sh }
-        - { name: Ubuntu,            os: ubuntu-latest,  shell: sh }
-        - { name: Windows - mingw32, os: windows-latest, shell: 'msys2 {0}', msystem: mingw32, msys-env: mingw-w64-i686 }
-        - { name: Windows - mingw64, os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64 }
+        - { name: Windows - MSVC, os: windows-latest, shell: 'msys2 {0}', msystem: mingw64, msys-env: mingw-w64-x86_64 }
         build-type: [Release]
         build-static: [ON]
     steps:
     - uses: actions/checkout@v3
-
-    - name: Setup GNU/Linux dependencies
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install \
-            libssl-dev ninja-build zlib1g-dev
-
-    - name: Setup macOS dependencies
-      if: runner.os == 'macOS'
-      run: |
-        brew install \
-            cmake ninja openssl zlib
-        echo "CMAKE_PREFIX_PATH=$(brew --prefix openssl):$(brew --prefix zlib)" >> $GITHUB_ENV
-
 
     - name: Setup Windows dependencies
       if: runner.os == 'Windows'
@@ -48,14 +30,12 @@ jobs:
       with:
         msystem: ${{matrix.platform.msystem}}
         install: >-
-          ${{matrix.platform.msys-env}}-gcc
           ${{matrix.platform.msys-env}}-cmake
-          ${{matrix.platform.msys-env}}-ninja
           ${{matrix.platform.msys-env}}-openssl
           ${{matrix.platform.msys-env}}-zlib
 
     - name: Configure CMake
-      run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{matrix.build-type}} -DBUILD_STATIC=${{matrix.build-static}}
+      run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{matrix.build-type}} -DBUILD_STATIC=${{matrix.build-static}}
 
     - name: Build
       run: cmake --build build
