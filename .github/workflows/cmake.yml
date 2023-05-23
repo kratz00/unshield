@@ -35,7 +35,7 @@ jobs:
           ${{matrix.platform.msys-env}}-zlib
 
     - name: Configure CMake
-      run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DOPENSSL_ROOT_DIR=/${{matrix.msystem}} -DCMAKE_BUILD_TYPE=${{matrix.build-type}} -DBUILD_STATIC=${{matrix.build-static}}
+      run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DOPENSSL_ROOT_DIR=/${{matrix.platform.msystem}} -DCMAKE_BUILD_TYPE=${{matrix.build-type}} -DBUILD_STATIC=${{matrix.build-static}}
 
     - name: Build
       run: cmake --build build --config ${{matrix.build-type}}
