@@ -34,7 +34,7 @@ jobs:
           ${{matrix.platform.msys-env}}-openssl
           ${{matrix.platform.msys-env}}-zlib
 
-    - name: Configure CMake
+    - name: Configure
       run: |
         MSYS2_ROOT=$(cygpath -m /)${{matrix.platform.msystem}}
         echo $MSYS2_ROOT
