@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-#if defined(_WIN32) && defined(UNSHIELD_DYNAMIC_LIBRARY)
+#if defined(UNSHIELD_DYNAMIC_LIBRARY)
 #  if defined(UNSHIELD_EXPORTS)
 #    define UNSHIELD_API __declspec(dllexport)
 #  else
