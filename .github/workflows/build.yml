@@ -28,6 +28,10 @@ jobs:
         build-static:
         - { name: static, value: ON }
         - { name: dynamic, value: OFF }
+        exclude:
+          # macOS does not support fully static executables
+        - platform: { name: macos-clang, os: macos-latest, shell: sh }
+          build-static: { name: static, value: ON }
     steps:
     - uses: actions/checkout@v7
 
