@@ -1,8 +1,3 @@
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-if("${isSystemDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
-endif()
-
 add_executable(unshield unshield.c)
 target_link_libraries(unshield libunshield)
 if(WIN32 AND HAVE_ICONV)
@@ -11,6 +6,17 @@ endif()
 
 add_executable(unshield-deobfuscate unshield-deobfuscate.c)
 target_link_libraries(unshield-deobfuscate libunshield)
+
+if(APPLE)
+    set(UNSHIELD_INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR}")
+elseif(UNIX)
+    set(UNSHIELD_INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
+endif()
+
+if(DEFINED UNSHIELD_INSTALL_RPATH)
+    set_target_properties(unshield unshield-deobfuscate PROPERTIES
+        INSTALL_RPATH "${UNSHIELD_INSTALL_RPATH}")
+endif()
 
 if(BUILD_STATIC)
     if(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang)$")
