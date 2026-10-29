@@ -116,6 +116,7 @@ if(WIN32)
             "wtdccm\\.dll"
         POST_EXCLUDE_REGEXES
             "[/\\\\][Ss]ystem32[/\\\\].*"
+            "[/\\\\][Ss]ysWOW64[/\\\\].*"
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endif()
